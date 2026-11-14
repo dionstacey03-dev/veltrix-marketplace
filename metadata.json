@@ -1,0 +1,6 @@
+{
+  "name": "VELTRIX",
+  "description": "VELTRIX — Shop Smarter. Live Better. Curated glassmorphic marketplace for precision audio, wearables, workspace hardware, and lifestyle gear.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

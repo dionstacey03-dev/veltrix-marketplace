@@ -1,0 +1,278 @@
+{
+  "entities": {
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Bootstrap or delegated administrator marker document keyed by Firebase UID.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "email": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private customer/user profile with PII isolated to owner and admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "email": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "address": { "type": "string", "maxLength": 300 },
+        "city": { "type": "string", "maxLength": 100 },
+        "postalCode": { "type": "string", "maxLength": 30 },
+        "country": { "type": "string", "maxLength": 100 },
+        "preferredCurrency": { "type": "string", "enum": ["USD", "LKR"] },
+        "role": { "type": "string", "enum": ["customer", "seller", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "preferredCurrency", "role", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Marketplace product category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 400 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "slug", "description", "createdAt", "updatedAt"]
+    },
+    "SellerPublic": {
+      "title": "SellerPublic",
+      "description": "Public storefront profile for a marketplace seller (non-PII).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "ownerUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "storeName": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 800 },
+        "country": { "type": "string", "maxLength": 80 },
+        "status": { "type": "string", "enum": ["active", "suspended"] },
+        "verified": { "type": "boolean" },
+        "commissionRate": { "type": "number" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "ownerUid", "storeName", "slug", "description", "country", "status", "verified", "commissionRate", "rating", "reviewCount", "createdAt", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Marketplace product listing.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "sellerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "description": { "type": "string", "minLength": 10, "maxLength": 3000 },
+        "priceUsd": { "type": "number" },
+        "compareAtUsd": { "type": "number" },
+        "stock": { "type": "integer" },
+        "sku": { "type": "string", "minLength": 2, "maxLength": 64 },
+        "imageUrl": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "gallery": { "type": "array" },
+        "specs": { "type": "array" },
+        "tags": { "type": "array" },
+        "isFeatured": { "type": "boolean" },
+        "isFlashSale": { "type": "boolean" },
+        "flashDiscountPercent": { "type": "number" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "integer" },
+        "status": { "type": "string", "enum": ["active", "draft", "archived"] },
+        "isDemo": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "sellerId", "sellerName", "categoryId", "categoryName", "title", "slug", "description", "priceUsd", "stock", "sku", "imageUrl", "gallery", "specs", "tags", "isFeatured", "isFlashSale", "flashDiscountPercent", "rating", "reviewCount", "status", "isDemo", "createdAt", "updatedAt"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer product review and rating.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "userName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "rating": { "type": "integer" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "comment": { "type": "string", "minLength": 4, "maxLength": 1500 },
+        "verifiedPurchase": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "userId", "userName", "rating", "title", "comment", "verifiedPurchase", "createdAt"]
+    },
+    "CartItem": {
+      "title": "CartItem",
+      "description": "Item inside an authenticated user's persistent shopping cart.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "quantity": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "quantity", "createdAt", "updatedAt"]
+    },
+    "WishlistItem": {
+      "title": "WishlistItem",
+      "description": "Saved wishlist product reference for an authenticated user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order record with line items, shipping address, and fulfillment status.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderNumber": { "type": "string", "minLength": 4, "maxLength": 40 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "customerEmail": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "shippingName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "shippingPhone": { "type": "string", "minLength": 4, "maxLength": 40 },
+        "shippingAddress": { "type": "string", "minLength": 4, "maxLength": 300 },
+        "shippingCity": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "shippingPostalCode": { "type": "string", "minLength": 2, "maxLength": 30 },
+        "shippingCountry": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "currency": { "type": "string", "enum": ["USD", "LKR"] },
+        "exchangeRate": { "type": "number" },
+        "subtotalUsd": { "type": "number" },
+        "discountUsd": { "type": "number" },
+        "shippingUsd": { "type": "number" },
+        "totalUsd": { "type": "number" },
+        "couponCode": { "type": "string", "maxLength": 40 },
+        "paymentMethod": { "type": "string", "enum": ["cod", "invoice_reservation"] },
+        "paymentStatus": { "type": "string", "enum": ["cod_pending", "awaiting_gateway", "paid_verified"] },
+        "status": { "type": "string", "enum": ["pending_confirmation", "processing", "shipped", "delivered", "cancelled"] },
+        "sellerIds": { "type": "array" },
+        "items": { "type": "array" },
+        "trackingNumber": { "type": "string", "maxLength": 100 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "orderNumber", "userId", "customerEmail", "shippingName", "shippingPhone", "shippingAddress", "shippingCity", "shippingPostalCode", "shippingCountry", "currency", "exchangeRate", "subtotalUsd", "discountUsd", "shippingUsd", "totalUsd", "paymentMethod", "paymentStatus", "status", "sellerIds", "items", "createdAt", "updatedAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Promotional discount coupon.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 2, "maxLength": 40, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "code": { "type": "string", "minLength": 2, "maxLength": 40 },
+        "description": { "type": "string", "maxLength": 200 },
+        "discountType": { "type": "string", "enum": ["percentage", "fixed_usd"] },
+        "discountValue": { "type": "number" },
+        "minOrderUsd": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "code", "description", "discountType", "discountValue", "minOrderUsd", "active", "createdAt", "updatedAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notification center item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "message": { "type": "string", "minLength": 2, "maxLength": 500 },
+        "type": { "type": "string", "enum": ["order", "promo", "inventory", "system"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "type", "read", "createdAt", "updatedAt"]
+    },
+    "PlatformSettings": {
+      "title": "PlatformSettings",
+      "description": "Public non-sensitive storefront & marketplace settings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "flashSaleActive": { "type": "boolean" },
+        "flashSaleTitle": { "type": "string", "maxLength": 140 },
+        "flashSaleEndsAt": { "type": "string", "maxLength": 64 },
+        "lkrPerUsd": { "type": "number" },
+        "freeShippingThresholdUsd": { "type": "number" },
+        "defaultCommissionPercent": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "flashSaleActive", "flashSaleTitle", "lkrPerUsd", "freeShippingThresholdUsd", "defaultCommissionPercent", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Admin role assignment documents."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Authenticated user profile and shipping details."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Storefront product categories."
+    },
+    "/sellers_public/{sellerId}": {
+      "schema": { "$ref": "#/entities/SellerPublic" },
+      "description": "Public seller storefront records."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Marketplace product catalog."
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Product reviews and ratings."
+    },
+    "/carts/{userId}/items/{itemId}": {
+      "schema": { "$ref": "#/entities/CartItem" },
+      "description": "User persistent shopping cart line items."
+    },
+    "/wishlists/{userId}/items/{itemId}": {
+      "schema": { "$ref": "#/entities/WishlistItem" },
+      "description": "User saved wishlist items."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer marketplace orders."
+    },
+    "/coupons/{couponId}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Promotional discount coupons."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User and admin notification center records."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/PlatformSettings" },
+      "description": "Public platform configuration."
+    }
+  }
+}

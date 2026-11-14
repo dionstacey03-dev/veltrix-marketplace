@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VELTRIX — Shop Smarter. Live Better.</title>
+    <meta
+      name="description"
+      content="Discover curated precision audio, wearables, workspace hardware, and carry gear on VELTRIX with intelligent search and multi-currency checkout."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VELTRIX" />
+    <meta property="og:title" content="VELTRIX — Shop Smarter. Live Better." />
+    <meta
+      property="og:description"
+      content="Discover curated precision audio, wearables, workspace hardware, and carry gear on VELTRIX with intelligent search and multi-currency checkout."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="VELTRIX — Shop Smarter. Live Better." />
+    <meta
+      name="twitter:description"
+      content="Discover curated precision audio, wearables, workspace hardware, and carry gear on VELTRIX."
+    />
+    <meta name="theme-color" content="#080C1B" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="VELTRIX" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "VELTRIX",
+        "applicationCategory": "ShoppingApplication",
+        "operatingSystem": "All",
+        "description": "Shop Smarter. Live Better. Curated marketplace for precision audio, wearables, workspace hardware, and carry gear."
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('veltrix_theme_mode') || 'system';
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark = saved === 'dark' || (saved === 'system' && prefersDark);
+          document.documentElement.classList.toggle('dark', isDark);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 dark:bg-[#080C1B] dark:text-slate-100 antialiased selection:bg-violet-500/20 selection:text-violet-600 dark:selection:text-cyan-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
