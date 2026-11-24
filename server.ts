@@ -503,12 +503,12 @@ app.post('/api/notifications/email', (req, res) => {
     });
   }
 
-  // Integration hook for live SMTP / Resend / SendGrid relay
-  return res.status(200).json({
-    delivered: true,
+  // Credentials alone do not mean a delivery provider is wired up.
+  return res.status(501).json({
+    delivered: false,
     configured: true,
     eventType: parsed.data.eventType,
-    message: `Email queued for ${parsed.data.to} via configured SMTP host.`,
+    message: 'SMTP credentials are present, but outbound email delivery is not implemented yet.',
   });
 });
 
