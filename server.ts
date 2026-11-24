@@ -14,6 +14,44 @@ const isProduction = process.env.NODE_ENV === 'production';
 const app = express();
 app.use(express.json({ limit: '1mb' }));
 
+// Per-process protection for billable AI routes. For multi-instance deployments,
+// move this counter to a shared store (for example Redis) before relying on it as
+// a global quota.
+const AI_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const AI_RATE_LIMIT_MAX = 20;
+const aiRequestBuckets = new Map<string, { count: number; resetAt: number }>();
+
+app.use('/api/ai', (req, res, next) => {
+  const now = Date.now();
+  const clientKey = req.ip || req.socket.remoteAddress || 'unknown';
+  let bucket = aiRequestBuckets.get(clientKey);
+
+  if (!bucket || bucket.resetAt <= now) {
+    bucket = { count: 0, resetAt: now + AI_RATE_LIMIT_WINDOW_MS };
+  }
+
+  if (bucket.count >= AI_RATE_LIMIT_MAX) {
+    const retryAfterSeconds = Math.max(1, Math.ceil((bucket.resetAt - now) / 1000));
+    res.setHeader('Retry-After', String(retryAfterSeconds));
+    res.setHeader('RateLimit-Limit', String(AI_RATE_LIMIT_MAX));
+    res.setHeader('RateLimit-Remaining', '0');
+    return res.status(429).json({ error: 'AI request limit reached. Please try again later.' });
+  }
+
+  bucket.count += 1;
+  aiRequestBuckets.set(clientKey, bucket);
+  res.setHeader('RateLimit-Limit', String(AI_RATE_LIMIT_MAX));
+  res.setHeader('RateLimit-Remaining', String(Math.max(0, AI_RATE_LIMIT_MAX - bucket.count)));
+
+  if (aiRequestBuckets.size > 5000) {
+    for (const [key, value] of aiRequestBuckets) {
+      if (value.resetAt <= now) aiRequestBuckets.delete(key);
+    }
+  }
+
+  return next();
+});
+
 function getGeminiClient(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
@@ -503,12 +541,14 @@ app.post('/api/notifications/email', (req, res) => {
     });
   }
 
-  // Integration hook for live SMTP / Resend / SendGrid relay
-  return res.status(200).json({
-    delivered: true,
-    configured: true,
+  // Do not report delivery until a real SMTP/Resend/SendGrid adapter is wired.
+  return res.status(501).json({
+    delivered: false,
+    configured: smtpConfigured,
     eventType: parsed.data.eventType,
-    message: `Email queued for ${parsed.data.to} via configured SMTP host.`,
+    message: smtpConfigured
+      ? 'SMTP credentials are configured, but no email delivery adapter is implemented. No email was sent.'
+      : 'Email delivery is not configured. No email was sent.',
   });
 });
 
