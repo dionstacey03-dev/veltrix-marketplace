@@ -27,3 +27,22 @@ jobs:
         run: bun run lint
       - name: Build production bundle
         run: bun run build
+
+  firestore-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Set up Java for Firestore Emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install Firestore rules test dependencies
+        run: npm install --prefix tests --no-save --package-lock=false --legacy-peer-deps firebase@^13.3.0 @firebase/rules-unit-testing@6.0.0 firebase-tools
+      - name: Run Firestore Emulator security tests
+        run: tests/node_modules/.bin/firebase --config firebase.test.json emulators:exec --only firestore --project demo-veltrix "node tests/firestore.rules.test.mjs"
