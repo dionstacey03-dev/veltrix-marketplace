@@ -260,7 +260,7 @@ export async function registerSellerStore(input: {
       slug: slugify(input.storeName),
       description: input.description.trim(),
       country: input.country.trim(),
-      status: 'active',
+      status: 'suspended',
       verified: false,
       commissionRate: Number(input.commissionRate),
       rating: 5,
